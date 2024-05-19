@@ -10,14 +10,10 @@ import java.util.ArrayList;
 
 public class SudokuGrid extends JPanel {
 
-    private  Cell[][] grid;
-    private SudokuSolver solver;
-    private int dimension;
-    private JPanel gridPanel;
-    private JPanel buttonPanel;
-    private JButton solveButton;
-    private JButton clearButton;
-    private ArrayList<String> manuallySetCellsLabels;
+    private final Cell[][] grid;
+    private final SudokuSolver solver;
+    private final int dimension;
+    private final JPanel gridPanel;
 
     SudokuGrid(int dimension) {
         this.grid = new Cell[dimension][dimension];
@@ -27,7 +23,7 @@ public class SudokuGrid extends JPanel {
         this.populateGridObject();
 
         this.gridPanel = new JPanel();
-        this.buttonPanel = new JPanel();
+        JPanel buttonPanel = new JPanel();
 
 
         this.gridPanel.setLayout(new GridLayout(this.dimension, this.dimension));
@@ -35,11 +31,11 @@ public class SudokuGrid extends JPanel {
 
         this.drawBoard();
 
-        this.clearButton = new JButton("Clear");
-        this.solveButton = new JButton("Solve");
-        this.buttonPanel.setLayout(new BorderLayout());
-        this.buttonPanel.add(clearButton, BorderLayout.WEST);
-        this.buttonPanel.add(solveButton, BorderLayout.EAST);
+        JButton clearButton = new JButton("Clear");
+        JButton solveButton = new JButton("Solve");
+        buttonPanel.setLayout(new BorderLayout());
+        buttonPanel.add(clearButton, BorderLayout.WEST);
+        buttonPanel.add(solveButton, BorderLayout.EAST);
         this.setLayout(new BorderLayout());
         this.add(gridPanel, BorderLayout.CENTER);
         this.add(buttonPanel, BorderLayout.SOUTH);
@@ -58,23 +54,22 @@ public class SudokuGrid extends JPanel {
         for (int y = 0; y < this.dimension; ++y) {
             for (int x = 0; x < this.dimension; ++x) {
                 Cell cell =  grid[y][x];
-                JTextField field = cell;
-                field.setBorder(border);
-                field.setPreferredSize(fieldDimension);
-                field.setHorizontalAlignment(JTextField.CENTER);
-                field.setFont(new Font("Arial", Font.PLAIN, 20));
+                cell.setBorder(border);
+                cell.setPreferredSize(fieldDimension);
+                cell.setHorizontalAlignment(JTextField.CENTER);
+                cell.setFont(new Font("Arial", Font.PLAIN, 20));
 
                 int number = cell.getNumber();
 
                 if(cell.isManuallySet){
-                    field.setBackground(Config.MANUALY_SET_COLOR);
-                    field.setText(number+"");
+                    cell.setBackground(Config.MANUALY_SET_COLOR);
+                    cell.setText(number+"");
                 }
                 else if(number >0){
-                    field.setBackground(Config.REASONER_SET_VALUE);
-                    field.setText(number+"");
+                    cell.setBackground(Config.REASONER_SET_VALUE);
+                    cell.setText(number+"");
                 }
-                this.gridPanel.add(field);
+                this.gridPanel.add(cell);
             }
         }
     }
@@ -96,24 +91,21 @@ public class SudokuGrid extends JPanel {
                 grid[row][col].setManuallySet(false);
                 grid[row][col].setNumber(0);
                 grid[row][col].setBackground(Config.UNSET_COLOR);
-                //TODO :After Clearing the Grid The Background Colors Saty the Same
             }
         }
     }
 
     private void solveSudoku() {
-
-        //JOptionPane.showMessageDialog(this, "Solve button pressed!");
         try {
-            this.manuallySetCellsLabels =new ArrayList<>();
+            ArrayList<String> manuallySetCellsLabels = new ArrayList<>();
             for (Cell[] cells : grid) {
                 for (Cell cell : cells) {
                     if (cell.isManuallySet) {
-                        this.manuallySetCellsLabels.add(cell.getLabel());
+                        manuallySetCellsLabels.add(cell.getLabel());
                     }
                 }
             }
-            this.solver.solve(this.manuallySetCellsLabels);
+            this.solver.solve(manuallySetCellsLabels);
             this.drawBoard();
         } catch (OWLOntologyCreationException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());

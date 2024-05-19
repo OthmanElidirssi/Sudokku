@@ -19,8 +19,8 @@ import java.util.regex.Pattern;
 
 public class SudokuSolver {
 
-    private Cell[][] grid;
-    private String ontolofyTemplateContent;
+    private final Cell[][] grid;
+    private final String ontolofyTemplateContent;
 
     public SudokuSolver(Cell[][] grid){
         this.grid = grid;
@@ -93,8 +93,7 @@ public class SudokuSolver {
     public  String getLabelFromURI(String input) {
         int startIndex = input.indexOf('#');
         int endIndex = input.indexOf('>');
-        String parsedString = input.substring(startIndex + 1, endIndex);
-        return parsedString;
+        return input.substring(startIndex + 1, endIndex);
     }
 
 
@@ -148,7 +147,6 @@ public class SudokuSolver {
                         break;
                     }
                 }
-                System.out.println();
             }
         }
     }
