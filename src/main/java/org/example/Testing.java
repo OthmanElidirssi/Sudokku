@@ -7,13 +7,9 @@ public class Testing {
 
     public static void main(String[] args) {
 
-
         Cell cell = new Cell((byte) 1, 1, 1);
-
         cell.setNumber(1);
-
-
-
+        new SudokuFrame(new SudokuGrid(6));
 
 
     }

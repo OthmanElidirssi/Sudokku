@@ -3,7 +3,7 @@ package org.example;
 
 import javax.swing.*;
 
-public class Cell   {
+public class Cell  extends JTextField  {
 
     int block;
     int row;
@@ -20,6 +20,8 @@ public class Cell   {
         this.block = block;
         this.row = row;
         this.column = column;
+
+        this.addKeyListener(new CellKeyListener(this));
     }
 
 

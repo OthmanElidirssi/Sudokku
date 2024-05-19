@@ -122,11 +122,6 @@ public class Main {
         hermit.precomputeInferences(InferenceType.OBJECT_PROPERTY_ASSERTIONS);
         hermit.precomputeInferences(InferenceType.SAME_INDIVIDUAL);
 
-
-
-
-
-
         printInferredAssertions(hermit, o);
 
 
