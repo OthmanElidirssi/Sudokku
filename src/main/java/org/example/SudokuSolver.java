@@ -11,11 +11,13 @@ import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SudokuSolver {
-
-
 
     private Cell[][] grid;
     private String ontolofyTemplateContent;
@@ -48,7 +50,8 @@ public class SudokuSolver {
     }
 
 
-    public void solve() throws OWLOntologyCreationException {
+    public void solve(ArrayList<String> manuallySetCellsLabels) throws OWLOntologyCreationException {
+
 
         String content = this.generateSameAsAxioms();
         OWLOntology ontology = this.generateOntology(content);
@@ -60,7 +63,9 @@ public class SudokuSolver {
         hermit.precomputeInferences(InferenceType.OBJECT_PROPERTY_ASSERTIONS);
         hermit.precomputeInferences(InferenceType.SAME_INDIVIDUAL);
 
-        printInferredAssertions(hermit, ontology);
+        System.out.println(manuallySetCellsLabels);
+
+        printInferredAssertions(hermit, ontology,manuallySetCellsLabels);
 
 
     }
@@ -77,22 +82,72 @@ public class SudokuSolver {
         return stringBuilder.toString();
     }
 
+    public boolean isStringInArrayList(ArrayList<String> arrayList, String searchString) {
+        for (String str : arrayList) {
+            if (str.equals(searchString)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public  String getLabelFromURI(String input) {
+        int startIndex = input.indexOf('#');
+        int endIndex = input.indexOf('>');
+        String parsedString = input.substring(startIndex + 1, endIndex);
+        return parsedString;
+    }
+
+
+    public int getNumberFromURI(String input){
+        Pattern pattern = Pattern.compile("\\d+");
+        Matcher matcher = pattern.matcher(input);
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group());
+        }
+
+        return 0;
+    }
+
+    public  int[] getCoordinatesFromLabel(String label)
+    {
+        String[] parts = label.split("_");
+
+        List<Integer> numbersList = new ArrayList<>();
+        for (String part : parts) {
+            String numericPart = part.replaceAll("[^0-9]", "");
+            for (char c : numericPart.toCharArray()) {
+                numbersList.add(Character.getNumericValue(c));
+            }
+        }
+        int[] numbers = new int[numbersList.size()];
+        for (int i = 0; i < numbersList.size(); i++) {
+            numbers[i] = numbersList.get(i);
+        }
+        return numbers;
+    }
+
     private  InputStream createInputStreamFromString(String content) {
         return new ByteArrayInputStream(content.getBytes());
     }
 
-    private static void printInferredAssertions(OWLReasoner reasoner, OWLOntology ontology) {
+
+    private  void printInferredAssertions(OWLReasoner reasoner, OWLOntology ontology, ArrayList<String> manuallySetCellsLabels) {
         for (OWLNamedIndividual individual : ontology.getIndividualsInSignature()) {
-            if(individual.toString().contains("http://projet.org#c") ){
-                System.out.println("Individual: " + individual);
+            String uri = individual.toString();
+            String labelOfIndividual = getLabelFromURI(uri);
+            if(uri.contains("http://projet.org#c")&&!isStringInArrayList(manuallySetCellsLabels,labelOfIndividual)  ){
+                int[] relativeCoordinates = this.getCoordinatesFromLabel(labelOfIndividual);
+                int[] absoluteCoordinates = SudokuUtils.getIndexesInOriginalMatrix(relativeCoordinates[0],relativeCoordinates[1],relativeCoordinates[2]);
+                Cell currentCell = this.grid[absoluteCoordinates[0]-1][absoluteCoordinates[1]-1];
+                currentCell.setNumber(-1);
                 Node<OWLNamedIndividual> sameIndividualsNode = reasoner.getSameIndividuals(individual);
                 for (OWLNamedIndividual sameIndividual : sameIndividualsNode.getEntities()) {
-                    if (!sameIndividual.equals(individual) && !sameIndividual.toString().contains("http://projet.org#c")  ) {
-                        System.out.println("  sameAs: " + sameIndividual);
+                    if (!sameIndividual.equals(individual) && !sameIndividual.toString().contains("http://projet.org#c") ) {
+                        int number = this.getNumberFromURI(sameIndividual.toString());
+                        currentCell.setNumber(number);
                         break;
                     }
                 }
-
                 System.out.println();
             }
         }
