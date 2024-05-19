@@ -16,7 +16,6 @@ public class CellKeyListener extends KeyAdapter {
     public void keyTyped(KeyEvent e) {
         char keyChar = e.getKeyChar();
         if (Character.isDigit(keyChar)) {
-            System.out.println("Key pressed: " + keyChar);
             cell.setNumber(Character.getNumericValue(keyChar));
             cell.setManuallySet(true);
             cell.setBackground(Config.MANUALY_SET_COLOR);

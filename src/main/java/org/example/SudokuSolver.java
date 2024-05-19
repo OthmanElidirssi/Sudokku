@@ -24,7 +24,7 @@ public class SudokuSolver {
 
     public SudokuSolver(Cell[][] grid){
         this.grid = grid;
-        ClassLoader classLoader = Main.class.getClassLoader();
+        ClassLoader classLoader = EntryPoint.class.getClassLoader();
         String filepath = Objects.requireNonNull(classLoader.getResource("6x6-f.owl")).getFile();
         this.ontolofyTemplateContent = readFileToString(filepath);
 
@@ -62,8 +62,6 @@ public class SudokuSolver {
         hermit.precomputeInferences(InferenceType.CLASS_ASSERTIONS);
         hermit.precomputeInferences(InferenceType.OBJECT_PROPERTY_ASSERTIONS);
         hermit.precomputeInferences(InferenceType.SAME_INDIVIDUAL);
-
-        System.out.println(manuallySetCellsLabels);
 
         printInferredAssertions(hermit, ontology,manuallySetCellsLabels);
 
