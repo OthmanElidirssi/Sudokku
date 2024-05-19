@@ -51,8 +51,7 @@ public class SudokuSolver {
     public void solve() throws OWLOntologyCreationException {
 
         String content = this.generateSameAsAxioms();
-        System.out.println(content);
-        /*OWLOntology ontology = this.generateOntology(content);
+        OWLOntology ontology = this.generateOntology(content);
         Reasoner hermit =new Reasoner(ontology);
         hermit.precomputeInferences(InferenceType.CLASS_HIERARCHY);
         hermit.precomputeInferences(InferenceType.OBJECT_PROPERTY_HIERARCHY);
@@ -62,7 +61,6 @@ public class SudokuSolver {
         hermit.precomputeInferences(InferenceType.SAME_INDIVIDUAL);
 
         printInferredAssertions(hermit, ontology);
-        */
 
 
     }
