@@ -9,7 +9,7 @@ import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.reasoner.InferenceType;
 import org.semanticweb.owlapi.reasoner.Node;
 import org.semanticweb.owlapi.reasoner.OWLReasoner;
-
+import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,15 +55,25 @@ public class SudokuSolver {
 
         String content = this.generateSameAsAxioms();
         OWLOntology ontology = this.generateOntology(content);
-        Reasoner hermit =new Reasoner(ontology);
-        hermit.precomputeInferences(InferenceType.CLASS_HIERARCHY);
-        hermit.precomputeInferences(InferenceType.OBJECT_PROPERTY_HIERARCHY);
-        hermit.precomputeInferences(InferenceType.DATA_PROPERTY_HIERARCHY);
-        hermit.precomputeInferences(InferenceType.CLASS_ASSERTIONS);
-        hermit.precomputeInferences(InferenceType.OBJECT_PROPERTY_ASSERTIONS);
-        hermit.precomputeInferences(InferenceType.SAME_INDIVIDUAL);
 
-        printInferredAssertions(hermit, ontology,manuallySetCellsLabels);
+        try{
+            Reasoner hermit =new Reasoner(ontology);
+
+            hermit.precomputeInferences(InferenceType.CLASS_HIERARCHY);
+            hermit.precomputeInferences(InferenceType.OBJECT_PROPERTY_HIERARCHY);
+            hermit.precomputeInferences(InferenceType.DATA_PROPERTY_HIERARCHY);
+            hermit.precomputeInferences(InferenceType.CLASS_ASSERTIONS);
+            hermit.precomputeInferences(InferenceType.OBJECT_PROPERTY_ASSERTIONS);
+            hermit.precomputeInferences(InferenceType.SAME_INDIVIDUAL);
+
+            printInferredAssertions(hermit, ontology,manuallySetCellsLabels);
+
+
+        }catch (Exception error){
+            JOptionPane.showMessageDialog(this.grid[0][0].getParent(), error.getMessage(), "Inconsistency", JOptionPane.ERROR_MESSAGE);
+
+        }
+
 
 
     }

@@ -9,12 +9,8 @@ import java.util.Objects;
 
 public class SudokuFrame {
 
-    private final JFrame frame = new JFrame("Sudoku solver");
-    private SudokuGrid grid;
-
 
     public SudokuFrame(SudokuGrid grid) {
-        this.grid=grid;
         Image icon = null;
         try {
             ClassLoader classLoader = EntryPoint.class.getClassLoader();
@@ -25,10 +21,11 @@ public class SudokuFrame {
             System.out.printf(e.getMessage());
         }
 
+        JFrame frame = new JFrame("Sudoku solver");
         if (icon != null) {
             frame.setIconImage(icon);
         }
-        frame.getContentPane().add(this.grid);
+        frame.getContentPane().add(grid);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setResizable(false);

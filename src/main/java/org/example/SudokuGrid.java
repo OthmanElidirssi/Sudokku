@@ -1,7 +1,6 @@
 package org.example;
 
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -14,6 +13,7 @@ public class SudokuGrid extends JPanel {
     private final SudokuSolver solver;
     private final int dimension;
     private final JPanel gridPanel;
+    private final JButton solveButton;
 
     SudokuGrid(int dimension) {
         this.grid = new Cell[dimension][dimension];
@@ -32,7 +32,7 @@ public class SudokuGrid extends JPanel {
         this.drawBoard();
 
         JButton clearButton = new JButton("Clear");
-        JButton solveButton = new JButton("Solve");
+        solveButton = new JButton("Solve");
         buttonPanel.setLayout(new BorderLayout());
         buttonPanel.add(clearButton, BorderLayout.WEST);
         buttonPanel.add(solveButton, BorderLayout.EAST);
@@ -58,6 +58,7 @@ public class SudokuGrid extends JPanel {
                 cell.setPreferredSize(fieldDimension);
                 cell.setHorizontalAlignment(JTextField.CENTER);
                 cell.setFont(new Font("Arial", Font.PLAIN, 20));
+
 
                 int number = cell.getNumber();
 
@@ -93,6 +94,7 @@ public class SudokuGrid extends JPanel {
                 grid[row][col].setBackground(Config.UNSET_COLOR);
             }
         }
+        this.solveButton.setEnabled(true);
     }
 
     private void solveSudoku() {
@@ -107,6 +109,7 @@ public class SudokuGrid extends JPanel {
             }
             this.solver.solve(manuallySetCellsLabels);
             this.drawBoard();
+            this.solveButton.setEnabled(false);
         } catch (OWLOntologyCreationException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
