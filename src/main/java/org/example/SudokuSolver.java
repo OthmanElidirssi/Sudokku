@@ -20,13 +20,13 @@ import java.util.regex.Pattern;
 public class SudokuSolver {
 
     private final Cell[][] grid;
-    private final String ontolofyTemplateContent;
+    private final String ontologyTemplateContent;
 
     public SudokuSolver(Cell[][] grid){
         this.grid = grid;
         ClassLoader classLoader = EntryPoint.class.getClassLoader();
         String filepath = Objects.requireNonNull(classLoader.getResource("6x6-f.owl")).getFile();
-        this.ontolofyTemplateContent = readFileToString(filepath);
+        this.ontologyTemplateContent = readFileToString(filepath);
 
     }
 
@@ -44,7 +44,7 @@ public class SudokuSolver {
     }
 
     private OWLOntology generateOntology(String content) throws OWLOntologyCreationException {
-        InputStream inputStream = createInputStreamFromString(this.ontolofyTemplateContent.replace(Config.REPLACEMENT_TEMPLATE_STRING,content));
+        InputStream inputStream = createInputStreamFromString(this.ontologyTemplateContent.replace(Config.REPLACEMENT_TEMPLATE_STRING,content));
         OWLOntologyManager m = OWLManager.createOWLOntologyManager();
         return m.loadOntologyFromOntologyDocument(inputStream);
     }

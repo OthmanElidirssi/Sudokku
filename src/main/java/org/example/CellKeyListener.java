@@ -5,7 +5,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class CellKeyListener extends KeyAdapter {
-    private Cell cell;
+    private final Cell cell;
 
     public CellKeyListener(Cell cell) {
         this.cell = cell;

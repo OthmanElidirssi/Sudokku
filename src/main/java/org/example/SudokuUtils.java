@@ -98,9 +98,4 @@ public class SudokuUtils {
 
         return indexesInOriginalMatrix;
     }
-
-
-
-
-
 }
